@@ -9,5 +9,5 @@ public enum IncentiveType
 
 public interface IIncentiveType
 {
-    bool IsSuccesful(Rebate rebate, Product product);
+    bool IsSuccesful(Rebate rebate, Product product, CalculateRebateRequest request);
 }
