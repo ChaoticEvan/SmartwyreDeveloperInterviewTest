@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 
 namespace Smartwyre.DeveloperTest.Types
 {
-    public class FixedRateRebate : IIncentiveType
+    public class AmountPerUom : IIncentiveType
     {
         public decimal CalculateRebateAmount(Rebate rebate, Product product, CalculateRebateRequest request)
         {
-            return product.Price * rebate.Percentage * request.Volume;
+            return rebate.Amount * request.Volume;
         }
 
         public bool IsSuccesful(Rebate rebate, Product product, CalculateRebateRequest request)
         {
-            if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedRateRebate))
+            if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.AmountPerUom))
             {
                 return false;
             }
-            else if (rebate.Percentage == 0 || product.Price == 0 || request.Volume == 0)
+            else if (rebate.Amount == 0 || request.Volume == 0)
             {
                 return false;
             }
-            
+
             return true;
         }
     }

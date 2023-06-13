@@ -9,6 +9,11 @@ namespace Smartwyre.DeveloperTest.Types
 {
     public class FixedCashAmount : IIncentiveType
     {
+        public decimal CalculateRebateAmount(Rebate rebate, Product product, CalculateRebateRequest request)
+        {
+            return rebate.Amount;
+        }
+
         public bool IsSuccesful(Rebate rebate, Product product, CalculateRebateRequest request)
         {
             if (rebate == null || product == null)

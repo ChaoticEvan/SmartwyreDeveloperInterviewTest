@@ -20,32 +20,18 @@ public class RebateService : IRebateService
             result.Success = false;
             return result;
         }
-
-        var rebateAmount = 0m;
-        switch (rebate.Incentive)
+        
+        if (!rebate.Incentive.IsSuccesful(rebate, product, request))
         {
-            case IncentiveType.AmountPerUom:
-                if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.AmountPerUom))
-                {
-                    result.Success = false;
-                }
-                else if (rebate.Amount == 0 || request.Volume == 0)
-                {
-                    result.Success = false;
-                }
-                else
-                {
-                    rebateAmount += rebate.Amount * request.Volume;
-                    result.Success = true;
-                }
-                break;
+            result.Success = false;
+            return result;
         }
 
-        if (result.Success)
-        {
-            var storeRebateDataStore = new RebateDataStore();
-            storeRebateDataStore.StoreCalculationResult(rebate, rebateAmount);
-        }
+        result.Success = true;
+        var rebateAmount = rebate.Incentive.CalculateRebateAmount(rebate, product, request);
+
+        var storeRebateDataStore = new RebateDataStore();
+        storeRebateDataStore.StoreCalculationResult(rebate, rebateAmount);
 
         return result;
     }
