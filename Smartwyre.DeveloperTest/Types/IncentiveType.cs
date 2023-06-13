@@ -6,3 +6,8 @@ public enum IncentiveType
     AmountPerUom,
     FixedCashAmount
 }
+
+public interface IIncentiveType
+{
+    public bool IsSuccesful();
+}

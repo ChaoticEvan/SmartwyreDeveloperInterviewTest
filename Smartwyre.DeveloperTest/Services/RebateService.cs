@@ -15,16 +15,19 @@ public class RebateService : IRebateService
 
         var result = new CalculateRebateResult();
 
+
+        if (rebate == null)
+        {
+            result.Success = false;
+            return result;
+        }
+
         var rebateAmount = 0m;
 
         switch (rebate.Incentive)
         {
             case IncentiveType.FixedCashAmount:
-                if (rebate == null)
-                {
-                    result.Success = false;
-                }
-                else if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedCashAmount))
+                if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedCashAmount))
                 {
                     result.Success = false;
                 }
@@ -40,11 +43,7 @@ public class RebateService : IRebateService
                 break;
 
             case IncentiveType.FixedRateRebate:
-                if (rebate == null)
-                {
-                    result.Success = false;
-                }
-                else if (product == null)
+                if (product == null)
                 {
                     result.Success = false;
                 }
@@ -64,11 +63,7 @@ public class RebateService : IRebateService
                 break;
 
             case IncentiveType.AmountPerUom:
-                if (rebate == null)
-                {
-                    result.Success = false;
-                }
-                else if (product == null)
+                if (product == null)
                 {
                     result.Success = false;
                 }
