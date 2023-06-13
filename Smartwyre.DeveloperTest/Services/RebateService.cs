@@ -15,24 +15,32 @@ public class RebateService : IRebateService
 
         var result = new CalculateRebateResult();
 
-        if (rebate == null || product == null)
-        {
-            result.Success = false;
-            return result;
-        }
-        
-        if (!rebate.Incentive.IsSuccesful(rebate, product, request))
+        if(!IsRebateValid(rebate, product, request))
         {
             result.Success = false;
             return result;
         }
 
         result.Success = true;
-        var rebateAmount = rebate.Incentive.CalculateRebateAmount(rebate, product, request);
 
         var storeRebateDataStore = new RebateDataStore();
-        storeRebateDataStore.StoreCalculationResult(rebate, rebateAmount);
+        storeRebateDataStore.StoreCalculationResult(rebate, rebate.Incentive.CalculateRebateAmount(rebate, product, request));
 
         return result;
+    }
+
+    private bool IsRebateValid(Rebate rebate, Product product, CalculateRebateRequest request)
+    {
+        if (rebate == null || product == null)
+        {
+            return false;
+        }
+
+        if (!rebate.Incentive.IsSuccesful(rebate, product, request))
+        {
+            return false;
+        }
+
+        return true;
     }
 }
