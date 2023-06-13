@@ -31,7 +31,7 @@ public class RebateService : IRebateService
 
     private bool IsRebateValid(Rebate rebate, Product product, CalculateRebateRequest request)
     {
-        if (rebate == null || product == null)
+        if (rebate == null || product == null || rebate.Incentive == null)
         {
             return false;
         }
