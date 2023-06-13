@@ -2,7 +2,6 @@ using Moq;
 using Smartwyre.DeveloperTest.Data;
 using Smartwyre.DeveloperTest.Services;
 using Smartwyre.DeveloperTest.Types;
-using System;
 using Xunit;
 
 namespace Smartwyre.DeveloperTest.Tests;
@@ -18,24 +17,14 @@ public class PaymentServiceTests
         Assert.False(result.Success);
     }
 
-    [Fact] 
+    [Fact]
     public void FixedCashAmountReturnsSuccessWhenIncentiveTypeIsSupported()
     {
         // Arrange
-        Rebate rebate = new Rebate()
-        {
-            Amount = 10,
-            Incentive = new FixedCashAmount(),
-        };
-        Product product = new Product()
-        { 
-            Price = 5,
-            SupportedIncentives = SupportedIncentiveType.FixedCashAmount
-        };
-        Mock<IRebateDataStore> rebateMock = new Mock<IRebateDataStore>();
-        rebateMock.Setup(x => x.GetRebate(It.IsAny<string>())).Returns(rebate);
-        Mock<IProductDataStore> productMock = new Mock<IProductDataStore>();
-        productMock.Setup(x => x.GetProduct(It.IsAny<string>())).Returns(product);
+        Rebate rebate = TestFixtures.BuildRebate(10, 0, new FixedCashAmount());
+        Product product = TestFixtures.BuildProduct(5, SupportedIncentiveType.FixedCashAmount);
+        Mock<IRebateDataStore> rebateMock = SetupRebateMock(rebate);
+        Mock<IProductDataStore> productMock = SetupProductMock(product);
 
         // Act
         RebateService service = new RebateService(rebateMock.Object, productMock.Object);
@@ -50,20 +39,10 @@ public class PaymentServiceTests
     public void FixedCashAmountReturnsFailureWhenIncentiveTypeIsNotSupported()
     {
         // Arrange
-        Rebate rebate = new Rebate()
-        {
-            Amount = 10,
-            Incentive = new FixedCashAmount(),
-        };
-        Product product = new Product()
-        {
-            Price = 5,
-            SupportedIncentives = SupportedIncentiveType.AmountPerUom
-        };
-        Mock<IRebateDataStore> rebateMock = new Mock<IRebateDataStore>();
-        rebateMock.Setup(x => x.GetRebate(It.IsAny<string>())).Returns(rebate);
-        Mock<IProductDataStore> productMock = new Mock<IProductDataStore>();
-        productMock.Setup(x => x.GetProduct(It.IsAny<string>())).Returns(product);
+        Rebate rebate = TestFixtures.BuildRebate(10, 0, new FixedCashAmount());
+        Product product = TestFixtures.BuildProduct(5, SupportedIncentiveType.AmountPerUom);
+        Mock<IRebateDataStore> rebateMock = SetupRebateMock(rebate);
+        Mock<IProductDataStore> productMock = SetupProductMock(product);
 
         // Act
         RebateService service = new RebateService(rebateMock.Object, productMock.Object);
@@ -72,5 +51,18 @@ public class PaymentServiceTests
         // Assert
         Assert.NotNull(result);
         Assert.False(result.Success);
+    }
+
+    private Mock<IRebateDataStore> SetupRebateMock(Rebate rebate)
+    {
+        var mock = new Mock<IRebateDataStore>();
+        mock.Setup(x => x.GetRebate(It.IsAny<string>())).Returns(rebate);
+        return mock;
+    }
+    private Mock<IProductDataStore> SetupProductMock(Product product)
+    {
+        var mock = new Mock<IProductDataStore>();
+        mock.Setup(x => x.GetProduct(It.IsAny<string>())).Returns(product);
+        return mock;
     }
 }
