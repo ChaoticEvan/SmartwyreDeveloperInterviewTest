@@ -1,4 +1,5 @@
-﻿using Smartwyre.DeveloperTest.Types;
+﻿using Moq;
+using Smartwyre.DeveloperTest.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,19 @@ namespace Smartwyre.DeveloperTest.Tests
                 Price = price,
                 SupportedIncentives = supportedIncentiveType
             };
+        }
+
+        public static Mock<IRebateDataStore> SetupRebateMock(Rebate rebate)
+        {
+            var mock = new Mock<IRebateDataStore>();
+            mock.Setup(x => x.GetRebate(It.IsAny<string>())).Returns(rebate);
+            return mock;
+        }
+        public static Mock<IProductDataStore> SetupProductMock(Product product)
+        {
+            var mock = new Mock<IProductDataStore>();
+            mock.Setup(x => x.GetProduct(It.IsAny<string>())).Returns(product);
+            return mock;
         }
     }
 }

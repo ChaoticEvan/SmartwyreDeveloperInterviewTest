@@ -16,11 +16,7 @@ namespace Smartwyre.DeveloperTest.Types
 
         public bool IsSuccesful(Rebate rebate, Product product, CalculateRebateRequest request)
         {
-            if (rebate == null || product == null)
-            {
-                return false;
-            }
-            else if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedCashAmount))
+            if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedCashAmount))
             {
                 return false;
             }
@@ -28,7 +24,7 @@ namespace Smartwyre.DeveloperTest.Types
             {
                 return false;
             }
-    
+
             return true;
         }
     }

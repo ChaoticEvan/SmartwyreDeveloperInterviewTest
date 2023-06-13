@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Smartwyre.DeveloperTest.Types
 {
-    public class FixedRateRebate : IIncentiveType
+    public class FixedRateAmount : IIncentiveType
     {
         public decimal CalculateRebateAmount(Rebate rebate, Product product, CalculateRebateRequest request)
         {
