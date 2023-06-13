@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Smartwyre.DeveloperTest.Services;
+using Smartwyre.DeveloperTest.Types;
+using System;
 
 namespace Smartwyre.DeveloperTest.Runner;
 
@@ -6,6 +8,6 @@ class Program
 {
     static void Main(string[] args)
     {
-        throw new NotImplementedException();
+        RebateService rebateService = new RebateService();
     }
 }
