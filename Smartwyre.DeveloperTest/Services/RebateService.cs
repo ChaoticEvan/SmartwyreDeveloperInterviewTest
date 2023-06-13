@@ -15,7 +15,6 @@ public class RebateService : IRebateService
 
         var result = new CalculateRebateResult();
 
-
         if (rebate == null || product == null)
         {
             result.Success = false;
@@ -23,7 +22,6 @@ public class RebateService : IRebateService
         }
 
         var rebateAmount = 0m;
-
         switch (rebate.Incentive)
         {
             case IncentiveType.FixedCashAmount:
