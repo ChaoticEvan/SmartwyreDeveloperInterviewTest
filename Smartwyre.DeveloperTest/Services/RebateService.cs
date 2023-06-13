@@ -5,13 +5,19 @@ namespace Smartwyre.DeveloperTest.Services;
 
 public class RebateService : IRebateService
 {
+    private IRebateDataStore RebateDataStore { get; set; }
+    private IProductDataStore ProductDataStore { get; set; }
+
+    public RebateService(IRebateDataStore rebateDataStore, IProductDataStore productDataStore)
+    {
+        ProductDataStore = productDataStore;
+        RebateDataStore = rebateDataStore;
+    }
+
     public CalculateRebateResult Calculate(CalculateRebateRequest request)
     {
-        var rebateDataStore = new RebateDataStore();
-        var productDataStore = new ProductDataStore();
-
-        Rebate rebate = rebateDataStore.GetRebate(request.RebateIdentifier);
-        Product product = productDataStore.GetProduct(request.ProductIdentifier);
+        Rebate rebate = RebateDataStore.GetRebate(request.RebateIdentifier);
+        Product product = ProductDataStore.GetProduct(request.ProductIdentifier);
 
         var result = new CalculateRebateResult();
 

@@ -8,6 +8,6 @@ class Program
 {
     static void Main(string[] args)
     {
-        RebateService rebateService = new RebateService();
+        RebateService rebateService = new RebateService(null, null);
     }
 }
