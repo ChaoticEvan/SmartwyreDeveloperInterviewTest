@@ -58,7 +58,7 @@ public class PaymentServiceTests
     {
         // Arrange
         Rebate rebate = TestFixtures.BuildRebate(0, 0, new FixedCashAmount());
-        Product product = TestFixtures.BuildProduct(5, SupportedIncentiveType.AmountPerUom);
+        Product product = TestFixtures.BuildProduct(5, SupportedIncentiveType.FixedCashAmount);
         Mock<IRebateDataStore> rebateMock = TestFixtures.SetupRebateMock(rebate);
         Mock<IProductDataStore> productMock = TestFixtures.SetupProductMock(product);
 
@@ -129,10 +129,67 @@ public class PaymentServiceTests
     }
 
     [Fact]
-    public void FixedRateAmountReturnsFailureWhenAmountIsZero()
+    public void FixedRateAmountReturnsFailureWhenPercentageIsZero()
     {
         // Arrange
-        Rebate rebate = TestFixtures.BuildRebate(0, 0, new FixedRateAmount());
+        Rebate rebate = TestFixtures.BuildRebate(10, 0, new FixedRateAmount());
+        Product product = TestFixtures.BuildProduct(5, SupportedIncentiveType.FixedRateRebate);
+        Mock<IRebateDataStore> rebateMock = TestFixtures.SetupRebateMock(rebate);
+        Mock<IProductDataStore> productMock = TestFixtures.SetupProductMock(product);
+
+        // Act
+        RebateService service = new RebateService(rebateMock.Object, productMock.Object);
+        var result = service.Calculate(new CalculateRebateRequest());
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.False(result.Success);
+    }
+
+    [Fact]
+    public void AmountPerUomReturnsSuccessWhenAllConditionsAreMet()
+    {
+        // Arrange
+        Rebate rebate = TestFixtures.BuildRebate(10, 5, new AmountPerUom());
+        Product product = TestFixtures.BuildProduct(5, SupportedIncentiveType.AmountPerUom);
+        Mock<IRebateDataStore> rebateMock = TestFixtures.SetupRebateMock(rebate);
+        Mock<IProductDataStore> productMock = TestFixtures.SetupProductMock(product);
+
+        // Act
+        RebateService service = new RebateService(rebateMock.Object, productMock.Object); ;
+        var result = service.Calculate(new CalculateRebateRequest()
+        {
+            Volume = 5
+        });
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.True(result.Success);
+    }
+
+    [Fact]
+    public void AmountPerUomReturnsFailureWhenIncentiveTypeIsNotSupported()
+    {
+        // Arrange
+        Rebate rebate = TestFixtures.BuildRebate(10, 0, new AmountPerUom());
+        Product product = TestFixtures.BuildProduct(5, SupportedIncentiveType.FixedRateRebate);
+        Mock<IRebateDataStore> rebateMock = TestFixtures.SetupRebateMock(rebate);
+        Mock<IProductDataStore> productMock = TestFixtures.SetupProductMock(product);
+
+        // Act
+        RebateService service = new RebateService(rebateMock.Object, productMock.Object);
+        var result = service.Calculate(new CalculateRebateRequest());
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.False(result.Success);
+    }
+
+    [Fact]
+    public void AmountPerUomReturnsFailureWhenAmountIsZero()
+    {
+        // Arrange
+        Rebate rebate = TestFixtures.BuildRebate(0, 0, new AmountPerUom());
         Product product = TestFixtures.BuildProduct(5, SupportedIncentiveType.AmountPerUom);
         Mock<IRebateDataStore> rebateMock = TestFixtures.SetupRebateMock(rebate);
         Mock<IProductDataStore> productMock = TestFixtures.SetupProductMock(product);
@@ -147,11 +204,11 @@ public class PaymentServiceTests
     }
 
     [Fact]
-    public void FixedRateAmountReturnsFailureWhenRebateIsNull()
+    public void AmountPerUomReturnsFailureWhenProductIsNull()
     {
         // Arrange
-        Rebate rebate = null;
-        Product product = TestFixtures.BuildProduct(5, SupportedIncentiveType.AmountPerUom);
+        Rebate rebate = TestFixtures.BuildRebate(0, 0, new AmountPerUom());
+        Product product = null;
         Mock<IRebateDataStore> rebateMock = TestFixtures.SetupRebateMock(rebate);
         Mock<IProductDataStore> productMock = TestFixtures.SetupProductMock(product);
 
