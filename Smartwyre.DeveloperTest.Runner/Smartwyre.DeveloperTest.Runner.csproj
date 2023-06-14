@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Smartwyre.DeveloperTest.Tests\Smartwyre.DeveloperTest.Tests.csproj" />
     <ProjectReference Include="..\Smartwyre.DeveloperTest\Smartwyre.DeveloperTest.csproj" />
   </ItemGroup>
 
